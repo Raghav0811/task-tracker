@@ -11,6 +11,7 @@ const App = () => {
   const [filter, setFilter] = useState("all");
   const [taskText, setTaskText] = useState("");
   const [taskDueDate, setTaskDueDate] = useState("");
+  const [taskPriority, setTaskPriority] = useState("medium");
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -46,6 +47,10 @@ const App = () => {
       if (!b.dueDate) return 1;
       return new Date(a.dueDate) - new Date(b.dueDate);
     });
+
+  const updateTaskText = (id, newText) => {
+    setTasks(tasks.map((t) => (t.id === id ? { ...t, text: newText } : t)));
+  };
 
   return (
     <div className="app-container">
@@ -85,6 +90,14 @@ const App = () => {
           value={taskDueDate}
           onChange={(e) => setTaskDueDate(e.target.value)}
         />
+        <select
+          values={taskPriority}
+          onChange={(e) => setTaskPriority(e.target.value)}
+        >
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
         <button type="submit">Add Task</button>
       </form>
 
@@ -95,6 +108,11 @@ const App = () => {
             task={task}
             toggleTask={toggleTask}
             removeTask={removeTask}
+            updateTaskText={(id, newText) =>
+              setTasks(
+                tasks.map((t) => (t.id === id ? { ...t, text: newText } : t))
+              )
+            }
           />
         ))}
       </div>
